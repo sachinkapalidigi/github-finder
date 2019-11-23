@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Spinner from "../layouts/Spinner";
 import { Link } from "react-router-dom";
+import Repos from "../Repos/Repos";
 
 class User extends Component {
   componentDidMount() {
     this.props.getUser(this.props.match.params.login);
+    this.props.getRepos(this.props.match.params.login);
   }
   render() {
     const {
@@ -23,7 +25,9 @@ class User extends Component {
       public_gists,
       hireable
     } = this.props.user;
-    const { loading } = this.props;
+
+    const { loading, repos } = this.props;
+
     if (loading) {
       return <Spinner />;
     }
@@ -82,6 +86,9 @@ class User extends Component {
             Public Gists : {public_gists}
           </button>
         </div>
+        <div>
+          <Repos repos={repos} />
+        </div>
       </>
     );
   }
@@ -90,7 +97,9 @@ class User extends Component {
 User.propTypes = {
   loading: PropTypes.bool,
   getUser: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object,
+  repos: PropTypes.array.isRequired,
+  getRepos: PropTypes.func.isRequired
 };
 
 export default User;

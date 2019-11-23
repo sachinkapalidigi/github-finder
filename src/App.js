@@ -14,6 +14,7 @@ class App extends React.Component {
     users: [],
     loading: false,
     user: {},
+    repos: [],
     alert: null
   };
 
@@ -34,6 +35,17 @@ class App extends React.Component {
     const res = await axios.get(`https://api.github.com/users/${username}`);
 
     this.setState({ user: res.data, loading: false });
+  };
+
+  // get user repos
+  getRepos = async username => {
+    this.setState({ loading: true });
+
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`
+    );
+
+    this.setState({ repos: res.data, loading: false });
   };
 
   // set alert
@@ -61,7 +73,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { users, loading, alert, user } = this.state;
+    const { users, loading, alert, user, repos } = this.state;
     return (
       <div className="App">
         <Navbar />
@@ -94,6 +106,8 @@ class App extends React.Component {
                   getUser={this.getUser}
                   loading={loading}
                   user={user}
+                  repos={repos}
+                  getRepos={this.getRepos}
                 />
               )}
             />
